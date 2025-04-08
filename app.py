@@ -338,7 +338,7 @@ app.layout = dmc.MantineProvider(
 
                     dcc.Markdown('''
                     The Green Algorithms project is led by
-                    [Loïc Lannelongue](www.lannelongue-group.org) and 
+                    [Loïc Lannelongue](https://www.lannelongue-group.org) and 
                     [Michael Inouye](https://www.inouyelab.org/home/people) at the University of Cambridge,
                     but made possible by the contribution and support of many: 
                     [full list](https://www.green-algorithms.org/about/).
@@ -500,3 +500,4 @@ def download_loader():
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+    
