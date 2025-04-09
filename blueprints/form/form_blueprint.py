@@ -2,16 +2,20 @@
 Implements the form blueprint.
 '''
 
-import pandas as pd
-
-from dash_extensions.enrich import DashBlueprint, Output, Input, State, PrefixIdTransform, ctx, html
 from types import SimpleNamespace
 
-from utils.utils import put_value_first, is_shown, custom_prefix_escape
-from utils.handle_inputs import availableLocations_continent, availableOptions_servers, availableOptions_country, availableOptions_region, DEFAULT_VALUES_FOR_PAGE_LOAD
-from utils.graphics import MY_COLORS
+import pandas as pd
+from dash_extensions.enrich import (DashBlueprint, Input, Output,
+                                    PrefixIdTransform, State, ctx, html)
 
 from blueprints.form.form_layout import get_green_algo_form_layout
+from utils.graphics import MY_COLORS
+from utils.handle_inputs import (DEFAULT_VALUES_FOR_PAGE_LOAD,
+                                 availableLocations_continent,
+                                 availableOptions_country,
+                                 availableOptions_region,
+                                 availableOptions_servers)
+from utils.utils import custom_prefix_escape, is_shown, put_value_first
 
 
 def get_form_blueprint(

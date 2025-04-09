@@ -6,10 +6,11 @@ This script implements:
 TODO: move the continuous inference scheme section to a specific function instead of being part of the base Form layout.
 '''
 
-from dash import html, dcc
 import dash_mantine_components as dmc
-from utils.utils import YES_NO_OPTIONS
+from dash import dcc, html
+
 from utils.handle_inputs import get_available_versions
+from utils.utils import YES_NO_OPTIONS
 
 appVersions_options = get_available_versions()
 
