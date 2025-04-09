@@ -17,7 +17,7 @@ from dash.exceptions import PreventUpdate
 from blueprints.import_export.import_export_layout import get_green_algo_import_export_layout
 
 
-def get_import_expot_blueprint(  # TODO correct typo
+def get_import_export_blueprint(
     id_prefix: str,
     csv_flushing_delay: int = 1500,
 ):

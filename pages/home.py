@@ -16,7 +16,7 @@ from dash_extensions.enrich import DashBlueprint, html
 
 from blueprints.form.form_blueprint import get_form_blueprint
 from blueprints.import_export.import_export_blueprint import \
-    get_import_expot_blueprint
+    get_import_export_blueprint
 from blueprints.methodology.methodology_blueprint import \
     get_methodology_blueprint
 from blueprints.metrics.metrics_blueprint import get_metrics_blueprint
@@ -61,7 +61,7 @@ methodology_content = get_methodology_blueprint(id_prefix=HOME_PAGE_ID_PREFIX)
 
 metrics = get_metrics_blueprint(id_prefix=HOME_PAGE_ID_PREFIX)
 
-import_export = get_import_expot_blueprint(id_prefix=HOME_PAGE_ID_PREFIX) 
+import_export = get_import_export_blueprint(id_prefix=HOME_PAGE_ID_PREFIX) 
 
 
 ###################################################

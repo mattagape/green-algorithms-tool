@@ -176,7 +176,7 @@ app.layout = dmc.MantineProvider(
             dcc.Store(id=f"{HOME_PAGE_ID_PREFIX}-version_from_input"),
             # Used to forward the version coming from a CSV uploaded to the Ai page 
             dcc.Store(id=f"{AI_PAGE_ID_PREFIX}-version_from_input"),
-            # A dictionnary containing all the backend data used everywhere in the app
+            # A dictionary containing all the backend data used everywhere in the app
             dcc.Store(id="versioned_data"),
             # The component storing the url state, only used to trigger callback when the app is loaded
             dcc.Location(id='url_content', refresh='callback-nav'), 
