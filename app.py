@@ -28,18 +28,19 @@ This script generates and runs the app.
 '''
 
 import os
+
 import dash
-from flask import send_file # Integrating Loader IO
-
-from dash import html, dcc, ctx, _dash_renderer
-from dash.dependencies import Input, Output, State
 import dash_mantine_components as dmc
-_dash_renderer._set_react_version("18.2.0")
+from dash import _dash_renderer, ctx, dcc, html
+from dash.dependencies import Input, Output, State
+from flask import send_file  # Integrating Loader IO
 
-from utils.handle_inputs import load_data, CURRENT_VERSION, DATA_DIR, get_available_versions, APP_VERSION_OPTIONS_LIST
-from pages.home import HOME_PAGE, HOME_PAGE_ID_PREFIX
 from pages.ai import AI_PAGE, AI_PAGE_ID_PREFIX
+from pages.home import HOME_PAGE, HOME_PAGE_ID_PREFIX
+from utils.handle_inputs import (APP_VERSION_OPTIONS_LIST, CURRENT_VERSION,
+                                 DATA_DIR, get_available_versions, load_data)
 
+_dash_renderer._set_react_version("18.2.0")
 
 ###################################################
 ## CREATE APP AND PAGES
