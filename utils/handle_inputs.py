@@ -7,13 +7,12 @@ import base64
 import copy
 import io
 import os
-import pandas as pd
-
 from types import SimpleNamespace
 from typing import Any
 
-from utils.utils import check_CIcountries_df, unlist, put_value_first
+import pandas as pd
 
+from utils.utils import check_CIcountries_df, put_value_first, unlist
 
 ###################################################
 ## GLOBAL VARIABLES

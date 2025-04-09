@@ -1,14 +1,13 @@
 ''' Plotly graphs used for results visualization. '''
 
-import os 
 import copy
-import dash
+import os
 
+import dash
 import pandas as pd
 import plotly.graph_objects as go
 
 from utils.handle_inputs import DATA_DIR
-
 
 ###################################################
 ## GLOBAL SETTINGS 
