@@ -3,14 +3,15 @@ This script implements miscellaneous functions and global variables
 used at page loading or when a csv is uploaded.
 """
 
-import os
-import copy
 import base64
+import copy
 import io
-
+import os
 import pandas as pd
 
 from types import SimpleNamespace
+from typing import Any
+
 from utils.utils import check_CIcountries_df, unlist, put_value_first
 
 
@@ -123,7 +124,7 @@ INPUT_KEYS_TO_IGNORE = [
 ###################################################
 ## DATA LOADING 
 
-def load_data(data_dir: str, **kwargs):
+def load_data(data_dir: str, **kwargs) -> SimpleNamespace:
     """
     Download each CSV and store it in a pd.DataFrame.
     We ignore the first row, as it contains metadata.
@@ -231,7 +232,7 @@ def load_data(data_dir: str, **kwargs):
 # The following functions return the options for the target dropdown
 # of the form. They are called within the Form blueprints.
 
-def availableLocations_continent(selected_provider: str, versioned_data: dict):
+def availableLocations_continent(selected_provider: str, versioned_data: dict) -> list:
     """
     Provides the available continents for a given provider.
     """
@@ -252,7 +253,7 @@ def availableLocations_continent(selected_provider: str, versioned_data: dict):
         return []
 
 
-def availableOptions_servers(selected_provider: str, selected_continent: str, versioned_data: dict):
+def availableOptions_servers(selected_provider: str, selected_continent: str, versioned_data: dict) -> list:
     """
     Provides the available servers for the given provider and continent.
     """
@@ -277,7 +278,7 @@ def availableOptions_servers(selected_provider: str, selected_continent: str, ve
         return []
 
 
-def availableOptions_country(selected_continent: str, versioned_data: dict):
+def availableOptions_country(selected_continent: str, versioned_data: dict) -> list:
     """
     Provides the available country for the selected continent.
     """
@@ -295,7 +296,7 @@ def availableOptions_country(selected_continent: str, versioned_data: dict):
         return []
 
 
-def availableOptions_region(selected_continent: str,selected_country: str, data: dict):
+def availableOptions_region(selected_continent: str,selected_country: str, data: dict) -> list:
     """
     Provides the available region for the selected continent and contry.
     """
@@ -325,7 +326,7 @@ def availableOptions_region(selected_continent: str,selected_country: str, data:
 ###################################################
 ## PROPERLY HANDLE INPUTS
 
-def validate_main_form_inputs(input_dict: dict, data_dict: dict, keys_of_interest: list):
+def validate_main_form_inputs(input_dict: dict, data_dict: dict, keys_of_interest: list) -> tuple[dict, dict]:
     """
     Validates the inputs: ensures the consistency between the keys and corresponding 
     value but also between some values.
@@ -338,10 +339,10 @@ def validate_main_form_inputs(input_dict: dict, data_dict: dict, keys_of_interes
         are contained in keysofInterest.
         - wrong_inputs [dict]: a subset of the input_dict containing inputs
         either raising erorrs either not corresponding to keysOfInterest.
-        - TO IMPLEMENT: unkonwn_inputs [dict]: a subset of the input_dict containing 
+        - TO IMPLEMENT: unknown_inputs [dict]: a subset of the input_dict containing 
         inputs with an unknown key.
     """
-    if type(data_dict) == dict:
+    if type(data_dict) is dict:
         data_dict = SimpleNamespace(**data_dict)
     appVersions_options_list = get_available_versions()
 
@@ -372,7 +373,7 @@ def validate_main_form_inputs(input_dict: dict, data_dict: dict, keys_of_interes
     else:
         platformType_options = None
 
-    def validateKey(key, value):
+    def validateKey(key, value) -> Any:
         """
         Ensures the consistency between the key and the provided value and
         checks the dependencies between different values.
@@ -447,7 +448,7 @@ def validate_main_form_inputs(input_dict: dict, data_dict: dict, keys_of_interes
     return clean_inputs, wrong_inputs
 
 
-def validate_ai_page_specific_inputs(input_dict: dict, keys_of_interest: list):
+def validate_ai_page_specific_inputs(input_dict: dict, keys_of_interest: list) -> tuple[dict, dict]:
     """
     Validates the inputs related to the ai page: ensures the consistency between 
     the keys and corresponding values. 
@@ -461,11 +462,11 @@ def validate_ai_page_specific_inputs(input_dict: dict, keys_of_interest: list):
         are contained in keysofInterest.
         - wrong_inputs [dict]: a subset of the input_dict containing inputs raising an error
         (TO IMPLEMENT : with an expected key and a value raising an error).
-        - TO IMPLEMENT: unkonwn_inputs [dict]: a subset of the input_dict containing inputs with
+        - TO IMPLEMENT: unknown_inputs [dict]: a subset of the input_dict containing inputs with
         an unknown key.
     """
 
-    def validateKey(key, value):
+    def validateKey(key, value) -> tuple[dict, dict]:
         """
         Ensure the consistency between the key and the provided value and
         checks the dependencies between different values.
@@ -500,7 +501,7 @@ def validate_ai_page_specific_inputs(input_dict: dict, keys_of_interest: list):
     
     clean_inputs = {}
     wrong_inputs = {}
-    # unknown_inputs = {}
+    # unknown_inputs = {}  TODO Not yet implemented.
 
     for key in keys_of_interest:
         new_value = unlist(input_dict[key])
@@ -513,7 +514,7 @@ def validate_ai_page_specific_inputs(input_dict: dict, keys_of_interest: list):
     return clean_inputs, wrong_inputs
 
 
-def open_input_csv_and_comment(upload_csv_content: str, filename: str):
+def open_input_csv_and_comment(upload_csv_content: str, filename: str) -> tuple[dict, str, str]:
     """
     Opens the input file content and stores it in a pandas DataFrame.
     NOTE: so far, only the first line of an input csv is read.
@@ -538,7 +539,7 @@ def open_input_csv_and_comment(upload_csv_content: str, filename: str):
     return {key: val[0] for key, val in df.to_dict().items()}, 'Input can be opened correctly', ''
 
 
-def read_base_form_inputs_from_csv(upload_csv: dict):
+def read_base_form_inputs_from_csv(upload_csv: dict) -> tuple[dict, dict, str]:
     """
     Reads the input dataframe to extract all the keys supposed to be verified.
     When an input raises an error, it is replaced by its corresponding default value.
