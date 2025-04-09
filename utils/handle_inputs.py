@@ -25,9 +25,10 @@ APP_VERSION_OPTIONS_LIST = [x for x in os.listdir(DATA_DIR) if ((x[0] == 'v') & 
 APP_VERSION_OPTIONS_LIST.sort(reverse=True)
 
 
-def get_available_versions():
+def get_available_versions() -> list:
     appVersions_options = [{'label': f'{CURRENT_VERSION} (latest)', 'value': CURRENT_VERSION}] + [{'label': k, 'value': k} for k in APP_VERSION_OPTIONS_LIST]
     return appVersions_options
+
 
 # The default values used to fill in the form when no other input is provided
 # WARNING: do not modify the order unless modifying the order of the outputs of 
@@ -153,7 +154,7 @@ def load_data(data_dir: str, **kwargs) -> SimpleNamespace:
         'GPU': pd.Series(gpu_df.TDP_per_core.values, index=gpu_df.model).to_dict()
     }
 
-    ### PUE ###
+    ### PUE (Power Usage Efficiency) ###
     pue_df = pd.read_csv(os.path.join(data_dir, "defaults_PUE.csv"),
                          sep=',', skiprows=1)
     pue_df.drop(['source'], axis=1, inplace=True)
@@ -167,23 +168,25 @@ def load_data(data_dir: str, **kwargs) -> SimpleNamespace:
 
     data_dict.CI_dict_byLoc = {}
     for location in CI_df.location:
-        temp_dict = {}  # was: foo = {}
+        location_dict = {}   # Dictionary of info about this location
         for col in ['continentName', 'countryName', 'regionName', 'carbonIntensity']:
-            temp_dict[col] = CI_df.loc[CI_df.location == location, col].values[0]
-        data_dict.CI_dict_byLoc[location] = temp_dict
+            location_dict[col] = CI_df.loc[CI_df.location == location, col].values[0]
+        data_dict.CI_dict_byLoc[location] = location_dict
 
     data_dict.CI_dict_byName = {}
     for continent in set(CI_df.continentName):
-        foo = CI_df.loc[CI_df.continentName == continent]
-        data_dict.CI_dict_byName[continent] = dict()
-        for country in set(foo.countryName):
-            bar = foo.loc[foo.countryName == country]
+        continent_df = CI_df.loc[CI_df.continentName == continent]  # continent_df is a pandas DataFrame for one continent.
+        data_dict.CI_dict_byName[continent] = dict()  # New, empty CI dict for this continent. 
+        
+        for country in set(continent_df.countryName):
+            country_df = continent_df.loc[continent_df.countryName == country]  # country_df is a pandas DataFrame for one country.
             data_dict.CI_dict_byName[continent][country] = dict()
-            for region in set(bar.regionName):
-                baar = bar.loc[bar.regionName == region]
+        
+            for region in set(country_df.regionName):
+                region_df = country_df.loc[country_df.regionName == region] # region_df is a pandas DataFrame for one region.
                 data_dict.CI_dict_byName[continent][country][region] = dict()
-                data_dict.CI_dict_byName[continent][country][region]['location'] = baar.location.values[0]
-                data_dict.CI_dict_byName[continent][country][region]['carbonIntensity'] = baar.carbonIntensity.values[0]
+                data_dict.CI_dict_byName[continent][country][region]['location'] = region_df.location.values[0]
+                data_dict.CI_dict_byName[continent][country][region]['carbonIntensity'] = region_df.carbonIntensity.values[0]
 
     ### CLOUD DATACENTERS ###
     datacenters_df = pd.read_csv(os.path.join(data_dir, "cloudProviders_datacenters.csv"),
@@ -295,7 +298,7 @@ def availableOptions_country(selected_continent: str, versioned_data: dict) -> l
         return []
 
 
-def availableOptions_region(selected_continent: str,selected_country: str, data: dict) -> list:
+def availableOptions_region(selected_continent: str, selected_country: str, data: dict) -> list:
     """
     Provides the available region for the selected continent and contry.
     """
