@@ -15,7 +15,7 @@ from utils.utils import check_CIcountries_df, unlist, put_value_first
 
 
 ###################################################
-## GLOABAL VARIABLES
+## GLOBAL VARIABLES
 
 CURRENT_VERSION = 'v3.0'
 DATA_DIR = os.path.join(os.path.abspath(''), 'data')
@@ -85,8 +85,8 @@ AI_PAGE_DEFAULT_VALUES = {
         'input_data_time_scope_val': 1,
     }
 
-# The following list should contain tke keys of uploaded CSV that should not
-# raise an message error because they are not intended to be processed as inputs
+# The following list should contain the keys of uploaded CSV that should not
+# raise a message error because they are not intended to be processed as inputs
 # Not all of them are relevant. 
 # TODO: clean it and make it more robust when improving the error message system.
 INPUT_KEYS_TO_IGNORE = [
@@ -167,10 +167,10 @@ def load_data(data_dir: str, **kwargs):
 
     data_dict.CI_dict_byLoc = {}
     for location in CI_df.location:
-        foo = {}
+        temp_dict = {}  # was: foo = {}
         for col in ['continentName', 'countryName', 'regionName', 'carbonIntensity']:
-            foo[col] = CI_df.loc[CI_df.location == location, col].values[0]
-        data_dict.CI_dict_byLoc[location] = foo
+            temp_dict[col] = CI_df.loc[CI_df.location == location, col].values[0]
+        data_dict.CI_dict_byLoc[location] = temp_dict
 
     data_dict.CI_dict_byName = {}
     for continent in set(CI_df.continentName):
@@ -186,11 +186,9 @@ def load_data(data_dir: str, **kwargs):
                 data_dict.CI_dict_byName[continent][country][region]['carbonIntensity'] = baar.carbonIntensity.values[0]
 
     ### CLOUD DATACENTERS ###
-    cloudDatacenters_df = pd.read_csv(os.path.join(data_dir, "cloudProviders_datacenters.csv"),
-                                      sep=',', skiprows=1)
+    datacenters_df = pd.read_csv(os.path.join(data_dir, "cloudProviders_datacenters.csv"),
+                                 sep=',', skiprows=1)
     data_dict.providers_withoutDC = ['aws']
-
-    datacenters_df = cloudDatacenters_df
 
     # Remove datacentres with unknown CI
     datacenters_df.dropna(subset=['location'], inplace=True)
@@ -296,6 +294,7 @@ def availableOptions_country(selected_continent: str, versioned_data: dict):
     else:
         return []
 
+
 def availableOptions_region(selected_continent: str,selected_country: str, data: dict):
     """
     Provides the available region for the selected continent and contry.
@@ -337,7 +336,7 @@ def validate_main_form_inputs(input_dict: dict, data_dict: dict, keys_of_interes
     returns: 
         - clean_inputs [dict]: a curated subset of input_dict with clean inputs. Its keys
         are contained in keysofInterest.
-        - wrong_imputs [dict]: a subset of the input_dict containing inputs
+        - wrong_inputs [dict]: a subset of the input_dict containing inputs
         either raising erorrs either not corresponding to keysOfInterest.
         - TO IMPLEMENT: unkonwn_inputs [dict]: a subset of the input_dict containing 
         inputs with an unknown key.
@@ -432,10 +431,10 @@ def validate_main_form_inputs(input_dict: dict, data_dict: dict, keys_of_interes
         return new_val
 
     ############################
-    # Now we validate each of the target key from the input dict
+    # Now we validate each target key from the input dict
 
     clean_inputs = {}
-    wrong_imputs = {}
+    wrong_inputs = {}
     for key in keys_of_interest:
         if key not in INPUT_KEYS_TO_IGNORE:
             new_value = unlist(input_dict[key])
@@ -443,15 +442,15 @@ def validate_main_form_inputs(input_dict: dict, data_dict: dict, keys_of_interes
                 clean_inputs[key] = validateKey(key, new_value)
             except Exception as e:
                 ### TODO: distinguish between wrong_inputs and unknown_inputs
-                wrong_imputs[key] = new_value
+                wrong_inputs[key] = new_value
 
-    return clean_inputs, wrong_imputs
+    return clean_inputs, wrong_inputs
 
 
 def validate_ai_page_specific_inputs(input_dict: dict, keys_of_interest: list):
     """
     Validates the inputs related to the ai page: ensures the consistency between 
-    the keys and correspondind values. 
+    the keys and corresponding values. 
 
     Args:
         - input_dict: inputs to process
@@ -460,7 +459,7 @@ def validate_ai_page_specific_inputs(input_dict: dict, keys_of_interest: list):
     Returns: 
         - clean_inputs [dict]: a curated subset of input_dict with clean inputs. Its keys
         are contained in keysofInterest.
-        - wrong_imputs [dict]: a subset of the input_dict containing inputs raising an error
+        - wrong_inputs [dict]: a subset of the input_dict containing inputs raising an error
         (TO IMPLEMENT : with an expected key and a value raising an error).
         - TO IMPLEMENT: unkonwn_inputs [dict]: a subset of the input_dict containing inputs with
         an unknown key.
@@ -500,8 +499,8 @@ def validate_ai_page_specific_inputs(input_dict: dict, keys_of_interest: list):
         return new_val
     
     clean_inputs = {}
-    wrong_imputs = {}
-    unknown_inputs = {}
+    wrong_inputs = {}
+    # unknown_inputs = {}
 
     for key in keys_of_interest:
         new_value = unlist(input_dict[key])
@@ -509,19 +508,19 @@ def validate_ai_page_specific_inputs(input_dict: dict, keys_of_interest: list):
             clean_inputs[key] = validateKey(key, new_value)
         except Exception as e:
             ### TODO: distinguish between wrong_inputs and unknown_inputs
-            wrong_imputs[key] = new_value
+            wrong_inputs[key] = new_value
 
-    return clean_inputs, wrong_imputs
+    return clean_inputs, wrong_inputs
 
 
 def open_input_csv_and_comment(upload_csv_content: str, filename: str):
     """
+    Opens the input file content and stores it in a pandas DataFrame.
+    NOTE: so far, only the first line of an input csv is read.
+
     Args:
         upload_csv_content [str]: a binary string corresponding to the uploaded file.
         filename [str]: the uploaded file name.
-
-    Opens the input file content and stores it in a pandas DataFrame.
-    NOTE: so far, only the first line of an input csv is read.
     """
     _, upload_string = upload_csv_content.split(',')
     decoded = base64.b64decode(upload_string)
@@ -539,7 +538,7 @@ def open_input_csv_and_comment(upload_csv_content: str, filename: str):
     return {key: val[0] for key, val in df.to_dict().items()}, 'Input can be opened correctly', ''
 
 
-def read_base_form_inputs_from_csv(upload_csv:dict):
+def read_base_form_inputs_from_csv(upload_csv: dict):
     """
     Reads the input dataframe to extract all the keys supposed to be verified.
     When an input raises an error, it is replaced by its corresponding default value.
@@ -573,22 +572,27 @@ def read_base_form_inputs_from_csv(upload_csv:dict):
     processed_inputs.update((k, DEFAULT_VALUES[k]) for k in set(DEFAULT_VALUES.keys()).difference(set(processed_inputs.keys())))
     # enforcing input values for entries that are correct
     values.update((k, processed_inputs[k]) for k in processed_inputs.keys())
+
     # Small fix for special case: when the provider is not Google Cloud we should not
     # replace the serverContinent and server values by default ones, because it has
     # an influence on how the PUE is computed in the aggregate_input_values callback.
     if values['provider'] != 'gcp':
         values['serverContinent'] = None
         values['server'] = None
+    
     return values, invalid_inputs, new_version
 
 
-def clean_non_used_inputs_for_export(form_aggregate_data: dict):
+def clean_non_used_inputs_for_export(form_aggregate_data: dict) -> dict:
     """
     Sets non-used fields of the form to standardized values (typically 0)
     so the csv downloaded from the web page is less confusing for the user.
 
     Args:
         form_aggregate_data (dict): the form aggregate data, containing all its fields
+
+    Returns:
+        The input dict, possibly updated.
     """
     ### Cores processing
     if form_aggregate_data['coreType'] == 'CPU':
@@ -619,7 +623,7 @@ def clean_non_used_inputs_for_export(form_aggregate_data: dict):
     return form_aggregate_data
 
 
-def filter_wrong_inputs(clean_inputs_from_csv: dict, wrong_inputs_from_csv: dict):
+def filter_wrong_inputs(clean_inputs_from_csv: dict, wrong_inputs_from_csv: dict) -> dict:
     # the pop method is used with None arg to avoid KeyError
     """
     Removes some items from the wrong inputs list.
@@ -646,6 +650,7 @@ def filter_wrong_inputs(clean_inputs_from_csv: dict, wrong_inputs_from_csv: dict
         wrong_inputs_from_csv.pop('usageCPU', None)
         wrong_inputs_from_csv.pop('usageCPUradio', None)
         wrong_inputs_from_csv.pop('tdpCPU', None)
+    
     ### Platform related processing
     if clean_inputs_from_csv['platformType'] != 'cloudComputing':
         wrong_inputs_from_csv.pop('provider', None)
@@ -659,6 +664,7 @@ def filter_wrong_inputs(clean_inputs_from_csv: dict, wrong_inputs_from_csv: dict
         else:
             wrong_inputs_from_csv.pop('serverContinent', None)
             wrong_inputs_from_csv.pop('server', None)
+    
     ### For consistency with AI page utilities
     wrong_inputs_from_csv.pop('R&D_radio', None)
     wrong_inputs_from_csv.pop('R&D_MF_value', None)
@@ -670,6 +676,7 @@ def filter_wrong_inputs(clean_inputs_from_csv: dict, wrong_inputs_from_csv: dict
     wrong_inputs_from_csv.pop('input_data_time_scope_val', None)
     wrong_inputs_from_csv.pop('tot_energy_needed', None)
     wrong_inputs_from_csv.pop('tot_carbonEmissions', None)
+
     return wrong_inputs_from_csv
 
 
