@@ -1,6 +1,7 @@
 """ Generic Python utils. """
 
 import pandas as pd
+from typing import Any
 
 YES_NO_OPTIONS = [
     {'label': 'Yes', 'value': 'Yes'},
@@ -15,7 +16,7 @@ class dotdict(dict):
     __delattr__ = dict.__delitem__
 
 
-def put_value_first(L: list, value):
+def put_value_first(L: list, value: Any) -> list:
     """Does not modify the input list if it does not contain the input value."""
     if value in L:
         L.remove(value)
@@ -23,7 +24,7 @@ def put_value_first(L: list, value):
     return L
 
 
-def unlist(x):
+def unlist(x: Any) -> Any:
     """ Extracts content of ONE ITEM lists."""
     if isinstance(x, list):
         assert len(x) == 1
@@ -32,11 +33,11 @@ def unlist(x):
         return x
 
 
-def is_shown(style: dict):
+def is_shown(style: dict) -> bool:
     return style['display'] != 'none'
 
 
-def check_CIcountries_df(df: pd.DataFrame):
+def check_CIcountries_df(df: pd.DataFrame) -> None:
     """
     Simple sanity check on the table containing the Carbon Intensities (CI) per country.
     """
@@ -45,7 +46,7 @@ def check_CIcountries_df(df: pd.DataFrame):
         assert 'Any' in regions_per_country_as_str.split(','), f"{regions_per_country_as_str} does't have an 'Any' column"
 
 
-def custom_prefix_escape(component_id: str):
+def custom_prefix_escape(component_id: str) -> bool:
     """
     Allows to escape some ids from the PrefixIdTransform applied to DashBlueprints.
     Inspired from the default_prefix_escape() implemented in dash_exceptions.
