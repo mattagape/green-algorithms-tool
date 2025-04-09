@@ -183,7 +183,7 @@ def load_data(data_dir: str, **kwargs) -> SimpleNamespace:
             data_dict.CI_dict_byName[continent][country] = dict()
         
             for region in set(country_df.regionName):
-                region_df = country_df.loc[country_df.regionName == region] # region_df is a pandas DataFrame for one region.
+                region_df = country_df.loc[country_df.regionName == region]  # region_df is a pandas DataFrame for one region.
                 data_dict.CI_dict_byName[continent][country][region] = dict()
                 data_dict.CI_dict_byName[continent][country][region]['location'] = region_df.location.values[0]
                 data_dict.CI_dict_byName[continent][country][region]['carbonIntensity'] = region_df.carbonIntensity.values[0]
@@ -197,9 +197,9 @@ def load_data(data_dir: str, **kwargs) -> SimpleNamespace:
     datacenters_df.dropna(subset=['location'], inplace=True)
 
     # Create unique names (in case some names are shared between providers)
-    for x in set(datacenters_df.provider):
-        foo = datacenters_df.loc[datacenters_df.provider == x]
-        assert len(foo.Name) == len(set(foo.Name))
+    for provider in set(datacenters_df.provider):
+        provider_df = datacenters_df.loc[datacenters_df.provider == provider]
+        assert len(provider_df.Name) == len(set(provider_df.Name))
 
     datacenters_df['name_unique'] = datacenters_df.provider + '--' + datacenters_df.Name
 
@@ -216,7 +216,7 @@ def load_data(data_dir: str, **kwargs) -> SimpleNamespace:
 
     data_dict.platformName_byType = {}
     for platformType in set(providersNames_df.platformType):
-        foo = providersNames_df.loc[providersNames_df.platformType == platformType]
+        provider_df = providersNames_df.loc[providersNames_df.platformType == platformType]  # This doesn't seem to be used.
         data_dict.platformName_byType[platformType] = pd.Series(providersNames_df.providerName.values, index=providersNames_df.provider).to_dict()
 
     ### REFERENCE VALUES
