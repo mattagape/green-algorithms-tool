@@ -300,7 +300,7 @@ def availableOptions_country(selected_continent: str, versioned_data: dict) -> l
 
 def availableOptions_region(selected_continent: str, selected_country: str, data: dict) -> list:
     """
-    Provides the available region for the selected continent and contry.
+    Provides the available region for the selected continent and country.
     """
     if data is not None:
         data_dict = SimpleNamespace(**data)
@@ -316,8 +316,7 @@ def availableOptions_region(selected_continent: str, selected_country: str, data
         availableOptions_names = list(availableOptions_data.keys())
         availableOptions_names.sort()
         # Move Any to the first row:
-        availableOptions_names.remove('Any')
-        availableOptions_names = ['Any'] + availableOptions_names
+        availableOptions_names = put_value_first(availableOptions_names, "Any")
         availableOptions_loc = [availableOptions_data[x]['location'] for x in availableOptions_names]
     else:
         availableOptions_loc = []
@@ -610,6 +609,7 @@ def clean_non_used_inputs_for_export(form_aggregate_data: dict) -> dict:
         form_aggregate_data['usageCPU'] = 1
         form_aggregate_data['usageCPUradio'] = 'No'
         form_aggregate_data['tdpCPU'] = 0
+
     ### Platform related processing
     if form_aggregate_data['platformType'] != 'cloudComputing':
         form_aggregate_data['provider'] = None
@@ -642,46 +642,29 @@ def filter_wrong_inputs(clean_inputs_from_csv: dict, wrong_inputs_from_csv: dict
     """
     ### Cores processing
     if clean_inputs_from_csv['coreType'] == 'CPU':
-        wrong_inputs_from_csv.pop('GPUmodel', None)
-        wrong_inputs_from_csv.pop('numberGPUs', None)
-        wrong_inputs_from_csv.pop('usageGPU', None)
-        wrong_inputs_from_csv.pop('usageGPUradio', None)
-        wrong_inputs_from_csv.pop('tdpGPU', None)
+        items_to_remove = ['GPUmodel', 'numberGPUs', 'usageGPU', 'usageGPUradio', 'tdpGPU']
     elif clean_inputs_from_csv['coreType'] == 'GPU':
-        wrong_inputs_from_csv.pop('CPUmodel', None)
-        wrong_inputs_from_csv.pop('numberCPUs', None)
-        wrong_inputs_from_csv.pop('usageCPU', None)
-        wrong_inputs_from_csv.pop('usageCPUradio', None)
-        wrong_inputs_from_csv.pop('tdpCPU', None)
-    
-    ### Platform related processing
+        items_to_remove = ['CPUmodel', 'numberCPUs', 'usageCPU', 'usageCPUradio', 'tdpCPU']
+    for item in items_to_remove:
+        wrong_inputs_from_csv.pop(item, None)
+
+    ### Platform-related processing
+    items_to_remove = []
     if clean_inputs_from_csv['platformType'] != 'cloudComputing':
-        wrong_inputs_from_csv.pop('provider', None)
-        wrong_inputs_from_csv.pop('serverContinent', None)
-        wrong_inputs_from_csv.pop('server', None)
+        items_to_remove = ['provider', 'serverContinent', 'server']
     else:
         if clean_inputs_from_csv['provider'] == 'gcp':
-            wrong_inputs_from_csv.pop('locationContinent', None)
-            wrong_inputs_from_csv.pop('locationCountry', None)
-            wrong_inputs_from_csv.pop('locationRegion', None)
+            items_to_remove = ['locationContinent', 'locationCountry', 'locationRegion']
         else:
-            wrong_inputs_from_csv.pop('serverContinent', None)
-            wrong_inputs_from_csv.pop('server', None)
-    
+            items_to_remove = ['serverContinent', 'server']
+    for item in items_to_remove:
+        wrong_inputs_from_csv.pop(item, None)   
+
+
     ### For consistency with AI page utilities
-    wrong_inputs_from_csv.pop('R&D_radio', None)
-    wrong_inputs_from_csv.pop('R&D_MF_value', None)
-    wrong_inputs_from_csv.pop('retrainings_radio', None)
-    wrong_inputs_from_csv.pop('retrainings_number_input', None)
-    wrong_inputs_from_csv.pop('retrainings_MF_value', None)
-    wrong_inputs_from_csv.pop('continuous_inference_switcher', None)
-    wrong_inputs_from_csv.pop('input_data_time_scope_unit', None)
-    wrong_inputs_from_csv.pop('input_data_time_scope_val', None)
-    wrong_inputs_from_csv.pop('tot_energy_needed', None)
-    wrong_inputs_from_csv.pop('tot_carbonEmissions', None)
+    for key in ['R&D_radio', 'R&D_MF_value', 'retrainings_radio', 'retrainings_number_input',
+                'retrainings_MF_value', 'continuous_inference_switcher', 'input_data_time_scope_unit',
+                'input_data_time_scope_val', 'tot_energy_needed', 'tot_carbonEmissions']:
+        wrong_inputs_from_csv.pop(key, None)
 
     return wrong_inputs_from_csv
-
-
-
-
