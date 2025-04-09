@@ -12,25 +12,28 @@ These additional fields must be taken into account:
 
 import os
 
-from dash import html, Input, Output, State, dcc
 import dash_mantine_components as dmc
+from dash import Input, Output, State, dcc, html
+from dash_extensions.enrich import DashBlueprint, html
 from dash_iconify import DashIconify
 
-from dash_extensions.enrich import DashBlueprint, html
-
-from blueprints.form.form_blueprint import get_form_blueprint
-from blueprints.import_export.import_export_blueprint import get_import_export_blueprint
-from blueprints.metrics.metrics_blueprint import get_metrics_blueprint
-from blueprints.methodology.methodology_blueprint import get_methodology_blueprint
-
+import blueprints.form.form_layout as form_layout
+import blueprints.methodology.methodology_layout as methodo_layout
 import blueprints.metrics.metrics_layout as metrics_layout
 import blueprints.metrics.utils as metrics_utils
-import blueprints.methodology.methodology_layout as methodo_layout
-import blueprints.form.form_layout as form_layout
-
+from blueprints.form.form_blueprint import get_form_blueprint
+from blueprints.import_export.import_export_blueprint import \
+    get_import_export_blueprint
+from blueprints.methodology.methodology_blueprint import \
+    get_methodology_blueprint
+from blueprints.metrics.metrics_blueprint import get_metrics_blueprint
 from utils.graphics import MY_COLORS
-from utils.handle_inputs import get_available_versions, filter_wrong_inputs, clean_non_used_inputs_for_export,  open_input_csv_and_comment, read_base_form_inputs_from_csv, AI_PAGE_DEFAULT_VALUES, validate_ai_page_specific_inputs
-
+from utils.handle_inputs import (AI_PAGE_DEFAULT_VALUES,
+                                 clean_non_used_inputs_for_export,
+                                 filter_wrong_inputs, get_available_versions,
+                                 open_input_csv_and_comment,
+                                 read_base_form_inputs_from_csv,
+                                 validate_ai_page_specific_inputs)
 
 ###################################################
 # PAGE CREATION
