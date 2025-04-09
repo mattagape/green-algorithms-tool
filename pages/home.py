@@ -8,22 +8,25 @@ and then, when the page is registered in the app, as app callbacks.
 '''
 
 import os
-
-import plotly.graph_objects as go
-
-from dash import html, dcc, Input, Output, State
 from types import SimpleNamespace
 
-from utils.handle_inputs import get_available_versions, filter_wrong_inputs, clean_non_used_inputs_for_export, open_input_csv_and_comment, read_base_form_inputs_from_csv
-from utils.graphics import BLANK_FIGURE, loading_wrapper
-from utils.graphics import create_cores_bar_chart_graphic, create_ci_bar_chart_graphic, create_cores_memory_pie_graphic
-
+import plotly.graph_objects as go
+from dash import Input, Output, State, dcc, html
 from dash_extensions.enrich import DashBlueprint, html
-from blueprints.form.form_blueprint import get_form_blueprint
-from blueprints.methodology.methodology_blueprint import get_methodology_blueprint
-from blueprints.metrics.metrics_blueprint import get_metrics_blueprint
-from blueprints.import_export.import_export_blueprint import get_import_expot_blueprint
 
+from blueprints.form.form_blueprint import get_form_blueprint
+from blueprints.import_export.import_export_blueprint import \
+    get_import_expot_blueprint
+from blueprints.methodology.methodology_blueprint import \
+    get_methodology_blueprint
+from blueprints.metrics.metrics_blueprint import get_metrics_blueprint
+from utils.graphics import (BLANK_FIGURE, create_ci_bar_chart_graphic,
+                            create_cores_bar_chart_graphic,
+                            create_cores_memory_pie_graphic, loading_wrapper)
+from utils.handle_inputs import (clean_non_used_inputs_for_export,
+                                 filter_wrong_inputs, get_available_versions,
+                                 open_input_csv_and_comment,
+                                 read_base_form_inputs_from_csv)
 
 ###################################################
 # PAGE CREATION
