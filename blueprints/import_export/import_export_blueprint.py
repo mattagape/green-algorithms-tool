@@ -2,19 +2,21 @@
 Implements the import-export blueprint.
 
 When a csv is uploaded, the dcc.Upload component (id=upload-data) is 
-automatically flushed after few seconds to let the user upload the same file again.
+automatically flushed after a few seconds to let the user upload the same file again.
 Otherwise, the callbacks with Input upload-data would not trigger because upload-data 
 actually remained the same.
 '''
 
-import pandas as pd
 import datetime
 
+import pandas as pd
 from dash import ctx, dcc
-from dash_extensions.enrich import DashBlueprint, PrefixIdTransform, Output, Input, State
 from dash.exceptions import PreventUpdate
+from dash_extensions.enrich import (DashBlueprint, Input, Output,
+                                    PrefixIdTransform, State)
 
-from blueprints.import_export.import_export_layout import get_green_algo_import_export_layout
+from blueprints.import_export.import_export_layout import \
+    get_green_algo_import_export_layout
 
 
 def get_import_export_blueprint(

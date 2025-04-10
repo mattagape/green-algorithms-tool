@@ -1,7 +1,7 @@
 """ Import-export layout. """
 
-from dash import html, dcc
-import dash_bootstrap_components as dbc 
+import dash_bootstrap_components as dbc
+from dash import dcc, html
 
 
 def get_green_algo_import_export_layout(
