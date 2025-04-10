@@ -1,7 +1,6 @@
 ''' Plotly graphs used for results visualization. '''
 
 import copy
-import os
 
 import dash
 import pandas as pd
@@ -211,6 +210,7 @@ def get_ci_bar_chart_layout():
     )
     return layout_bar
 
+
 def create_ci_bar_chart_graphic(form_metrics, versioned_data):
 
     # list of countries displayed
@@ -269,8 +269,9 @@ def create_ci_bar_chart_graphic(form_metrics, versioned_data):
 
     return fig
 
+
 ###################################################
-## CORES AND MEMORY CONSUMPTION PIE GRAH
+## CORES AND MEMORY CONSUMPTION PIE CHART
 
 
 def get_cores_memory_pie_chart_layout(aggregated_data):

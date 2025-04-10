@@ -179,7 +179,7 @@ def get_training_help_content(title: str):
                         ''' 
                         __Main/final training stage__: the computations performed to achieve the final model 
                         of your AI solution. 
-                        It can either correspond to training from scratch a custom model 
+                        It can either correspond to training a custom model from scratch, 
                         or fine-tuning an existing model.
 
                         __R&D training__: the compute involved in the research and development phase before the

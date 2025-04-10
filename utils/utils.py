@@ -43,7 +43,7 @@ def check_CIcountries_df(df: pd.DataFrame) -> None:
     """
     regions_cols_as_str = df.groupby(['continentName', 'countryName'])['regionName'].apply(','.join)
     for regions_per_country_as_str in regions_cols_as_str:
-        assert 'Any' in regions_per_country_as_str.split(','), f"{regions_per_country_as_str} does't have an 'Any' column"
+        assert 'Any' in regions_per_country_as_str.split(','), f"{regions_per_country_as_str} doesn't have an 'Any' column"
 
 
 def custom_prefix_escape(component_id: str) -> bool:
