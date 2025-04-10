@@ -1,10 +1,12 @@
 from types import SimpleNamespace
-from dash_extensions.enrich import DashBlueprint, PrefixIdTransform, Output, Input, State
-from dash import html
 
-from utils.utils import custom_prefix_escape
-from blueprints.metrics.metrics_layout import get_green_algo_metrics_layout
+from dash import html
+from dash_extensions.enrich import (DashBlueprint, Input, Output,
+                                    PrefixIdTransform, State)
+
 import blueprints.metrics.utils as utils
+from blueprints.metrics.metrics_layout import get_green_algo_metrics_layout
+from utils.utils import custom_prefix_escape
 
 
 def get_metrics_blueprint(

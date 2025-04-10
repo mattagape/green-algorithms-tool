@@ -1,7 +1,8 @@
 """ Generic Python utils. """
 
-import pandas as pd
 from typing import Any
+
+import pandas as pd
 
 YES_NO_OPTIONS = [
     {'label': 'Yes', 'value': 'Yes'},

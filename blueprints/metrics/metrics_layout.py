@@ -11,7 +11,8 @@ The latter only display the total value.
 
 import os
 
-from dash import html, dcc
+from dash import dcc, html
+
 from utils.graphics import loading_wrapper
 
 image_dir = os.path.join('assets/images')
