@@ -269,7 +269,7 @@ def get_form_blueprint(
             else:
                 availableOptions = []
 
-            listOptions = [
+            listOptions = [  # FIXME should it be {'label': k, 'value': v} ??
                 {'label': v, 'value': k} for k, v in availableOptions + [("other","Other")]
             ]
             return listOptions
